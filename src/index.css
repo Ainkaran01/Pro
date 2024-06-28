@@ -1,0 +1,105 @@
+*{
+
+    box-sizing: border-box;
+    margin: 0;
+}
+
+body{
+
+    font-family: sans-serif;
+}
+.root{
+
+
+    border: 1px solid rgb(244, 232, 232);
+    border-radius: 5px;
+    padding: 5px;
+    
+   
+} 
+
+
+
+
+h3{
+color: #93de08d7;
+    margin: 10px 0;
+
+}
+h4,h5{
+
+   
+    margin: 10px 0;
+}
+.exp{
+    font-size: 15px;
+    line-height: 21px;
+    text-align: center;
+}
+.card-container{
+
+ background-color: #353b48;
+ border-radius: 5px;
+ box-shadow: 0px 10px 20px -10px rgb(0, 0, 0,0.75);
+ color: #b3b8cd;
+ padding-top: 30px;
+ width: 270px;
+ max-width: 100%;
+ text-align: center;
+ position: relative;
+
+
+}
+.pro{
+
+    color: black;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 3px 7px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+.online{
+
+    background-color:greenyellow;
+}
+
+.offline{
+
+    background-color:#febb0b;
+}
+
+.img{
+     width: 200px;
+    border: 2px solid white;
+    border-radius: 50%;
+    padding: 7px;
+}
+
+ .primary{
+
+    background-color: transparent;
+    border: 2px solid rgb(242, 242, 251);
+    border-radius: 9px;
+    margin-bottom: 10px;
+    color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: 500;
+    padding: 5px 15px;
+     cursor: pointer;
+     margin-top: 10px;
+
+} 
+
+.primary:hover{
+ 
+    background-color: rgb(20, 146, 11);
+    color: rgb(236, 240, 235);
+    border-color: rgb(251, 251, 251); 
+    font-weight: bolder;
+    font-family: 'Times New Roman', Times, serif; 
+    transition:ease-in;
+    transition-duration: 0.5s;
+}
