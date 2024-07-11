@@ -1,37 +1,39 @@
 import React, { useState } from "react";
 import { Button, Form, Col, Row } from "react-bootstrap";
-import "./App.css";
-import visaImg1 from "./Images/visaImg1.png"; 
-import masterImg2 from "./Images/masterImg2.jpg"; 
+import './PaymentMethod.css';
+import visaImg1 from '../../../assets/visaImg1.png'; 
+import masterImg2 from '../../../assets/masterImg2.jpg'; 
 
 const PaymentMethod = ({ onPaymentSuccess }) => {
-  const [paymentMethod, setPaymentMethod] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiryDate, setExpiryDate] = useState("");
-  const [cvv, setCVV] = useState("");
-
-  const handlePayment = () => {
-    // Validate payment method and card details
-    if (paymentMethod && cardNumber && expiryDate && cvv) {
-      // Simulate payment processing
-      setTimeout(() => {
-        onPaymentSuccess();
-      }, 1000); // Simulating async payment process
-    } else {
-      alert("Please fill in all card details.");
-    }
-  };
-
-  const getCardImage = () => {
-    if (paymentMethod === "visa") {
-      return visaImg1;
-    } else if (paymentMethod === "mastercard") {
-      return masterImg2;
-    } else {
-      return null;
-    }
-  };
-
+    
+    const [paymentMethod, setPaymentMethod] = useState("");
+    const [cardNumber, setCardNumber] = useState("");
+    const [expiryDate, setExpiryDate] = useState("");
+    const [cvv, setCVV] = useState("");
+  
+    const handlePayment = () => {
+      // Validate payment method and card details
+      if (paymentMethod && cardNumber && expiryDate && cvv) {
+        // Simulate payment processing
+        setTimeout(() => {
+          onPaymentSuccess();
+        }, 1000); // Simulating async payment process
+      } else {
+        alert("Please fill in all card details.");
+      }
+    };
+  
+    const getCardImage = () => {
+      if (paymentMethod === "visa") {
+        return visaImg1;
+      } else if (paymentMethod === "mastercard") {
+        return masterImg2;
+      } else {
+        return null;
+      }
+    };
+  
+     
   return (
     <div className="Paymentpage">
       <Form.Group>
@@ -100,7 +102,7 @@ const PaymentMethod = ({ onPaymentSuccess }) => {
         </Row>
       )}
     </div>
-  );
-};
+  )
+}
 
 export default PaymentMethod;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Button,
@@ -10,24 +10,28 @@ import {
   Container,
 } from "react-bootstrap";
 import Rating from "react-rating-stars-component";
-import BookNowPortal from "./BookNowPortal";
-import "./Centerpage.css"; // Import the CSS file
+import BookNowPortal from "../BookNowPortal/BookNowPortal";
+import axios from "axios";
+import "./CenterPage.css";
 
-function Centerpage(props) {
+const CenterPage = (props) => {
   const [bookNowShow, setBookNowShow] = useState(false);
-  const [customerReviews, setCustomerReviews] = useState([
-    { id: 1, reviewer: "John Doe", comment: "Excellent service!", rating: 5, timestamp: new Date() },
-    { id: 2, reviewer: "Jane Smith", comment: "Very professional.", rating: 4, timestamp: new Date() },
-  ]);
+  const [customerReviews, setCustomerReviews] = useState([]);
   const [newReview, setNewReview] = useState({
     reviewer: "",
     comment: "",
     rating: 0,
   });
 
+  useEffect(() => {
+    axios
+      .get(`http://localhost/quickmatch_api/submit_review.php?provider_id=${props.provider_id}`)
+      .then((response) => setCustomerReviews(response.data))
+      .catch((error) => console.error("Error fetching reviews:", error));
+  }, [props.provider_id]);
+
   const handleBookNowClose = () => setBookNowShow(false);
   const handleBookNowShow = () => setBookNowShow(true);
-
   const handleReviewChange = (e) => {
     const { name, value } = e.target;
     setNewReview({ ...newReview, [name]: value });
@@ -35,20 +39,31 @@ function Centerpage(props) {
 
   const handleReviewSubmit = (e) => {
     e.preventDefault();
-    setCustomerReviews([
-      ...customerReviews,
-      { ...newReview, id: customerReviews.length + 1, timestamp: new Date() },
-    ]);
-    setNewReview({ reviewer: "", comment: "", rating: 0 });
+    const reviewData = {
+      provider_id: props.provider_id,
+      ...newReview,
+    };
+
+    axios
+      .post("http://localhost/quickmatch_api/submit_review.php", reviewData)
+      .then((response) => {
+        setCustomerReviews([...customerReviews, response.data]);
+        setNewReview({ reviewer: "", comment: "", rating: 0 });
+      })
+      .catch((error) => console.error("Error submitting review:", error));
   };
 
   return (
     <>
       {bookNowShow ? (
         <BookNowPortal
+          {...props}
           show={bookNowShow}
           onHide={handleBookNowClose}
-          providerName={props.name}
+          provider_id={props.provider_id}
+          service_category_id={props.service_category_id}
+          provider_name={props.name}
+          service_name={props.service_name}
         />
       ) : (
         <Modal
@@ -64,15 +79,11 @@ function Centerpage(props) {
           </Modal.Header>
           <Modal.Body>
             <Container className="User-container">
-              <div className="header-section text-center ">
+              <div className="header-section text-center">
                 <h2>{props.name}</h2>
-                <img
-                  src={props.profile}
-                  alt="Profile"
-                  className="profile-img"
-                />
+                <img src={`http://localhost/quickmatch_api/profile_images/${props.profile}`} alt="Profile" className="profile-img" />
               </div>
-              <div className="info-section ">
+              <div className="info-section">
                 <h3>Business Hours</h3>
                 <p>
                   <strong>Monday - Saturday:</strong> 08:00 AM - 06:00 PM
@@ -96,7 +107,9 @@ function Centerpage(props) {
                             <div className="reviewer-details">
                               <Card.Title>{review.reviewer}</Card.Title>
                               <Card.Text className="cardtext1">
-                                {review.comment.length > 150 ? `${review.comment.substring(0, 150)}...` : review.comment}
+                                {review.comment.length > 150
+                                  ? `${review.comment.substring(0, 150)}...`
+                                  : review.comment}
                               </Card.Text>
                             </div>
                           </div>
@@ -109,7 +122,10 @@ function Centerpage(props) {
                                 activeColor="#ffc107" // Color of active stars
                               />
                             </div>
-                            <small className="text-muted">Reviewed on {review.timestamp.toLocaleDateString()}</small>
+                            <small className="text-muted">
+                              Reviewed on{" "}
+                              {new Date(review.timestamp).toLocaleDateString()}
+                            </small>
                           </Card.Text>
                         </Card.Body>
                       </Card>
@@ -117,7 +133,7 @@ function Centerpage(props) {
                   ))}
                 </Carousel>
               </div>
-              <Form onSubmit={handleReviewSubmit} className="mb-4">
+              <Form onSubmit={handleReviewSubmit} className="mb-4" action="GET">
                 <Form.Group controlId="reviewerName">
                   <Form.Label>Your Name</Form.Label>
                   <Form.Control
@@ -141,14 +157,13 @@ function Centerpage(props) {
                 </Form.Group>
                 <Form.Group controlId="reviewRating">
                   <Form.Label>Your Rating</Form.Label>
-                  <Form.Control
-                    type="number"
-                    name="rating"
+                  <Rating
                     value={newReview.rating}
-                    onChange={handleReviewChange}
-                    min={0}
-                    max={5}
-                    required
+                    onChange={(newValue) =>
+                      setNewReview({ ...newReview, rating: newValue })
+                    }
+                    size={24}
+                    activeColor="#ffc107"
                   />
                 </Form.Group>
                 <Button type="submit" className="submitbutton">
@@ -189,6 +204,6 @@ function Centerpage(props) {
       )}
     </>
   );
-}
+};
 
-export default Centerpage;
+export default CenterPage;
